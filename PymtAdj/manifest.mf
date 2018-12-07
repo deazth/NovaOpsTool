@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ops.mawa
+OpenIDE-Module-Implementation-Version: 6
+OpenIDE-Module-Localizing-Bundle: ops/mawa/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: HSBA
+OpenIDE-Module-Implementation-Version: 8
+OpenIDE-Module-Localizing-Bundle: HSBA/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+

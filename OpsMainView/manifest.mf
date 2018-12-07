@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: bsm.nova.ops
+OpenIDE-Module-Implementation-Version: 39
+OpenIDE-Module-Localizing-Bundle: bsm/nova/ops/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+

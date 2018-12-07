@@ -1,0 +1,9 @@
+2016-12-16 17:14:27,778 INFO SwingWorker-pool-3-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@199de6a7
+2018-05-24 11:15:47,780 INFO SwingWorker-pool-2-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@1f89efc4
+2018-05-24 11:15:57,968 INFO SwingWorker-pool-2-thread-2 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@62f42306
+2018-05-24 11:24:11,436 INFO SwingWorker-pool-1-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@61201ace
+2018-05-24 11:30:06,936 INFO SwingWorker-pool-1-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@5ee9682e
+2018-05-24 11:33:40,859 INFO SwingWorker-pool-1-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@f2395ed
+2018-05-24 11:58:06,629 INFO SwingWorker-pool-1-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@27967ba2
+2018-05-24 11:58:15,092 INFO SwingWorker-pool-1-thread-2 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@43546d7e
+2018-12-05 17:07:24,764 INFO SwingWorker-pool-1-thread-1 ops.com.PortalConnectionManager - PortalContext: com.portal.pcm.PortalContext@2176b54
