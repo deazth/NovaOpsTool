@@ -32,6 +32,9 @@
             </folder>
             <folder name="Special">
                 <folder name="Telephony">
+                    <file name="bsm-nova-ops-AtaTopComponent.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-AtaTopComponent.instance"/>
+                    </file>
                     <file name="bsm-nova-ops-BCLTopComponent.shadow">
                         <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-BCLTopComponent.instance"/>
                     </file>
@@ -53,6 +56,7 @@
                 </file>
             </folder>
             <file name="bsm-nova-dev-setPLTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-AtaTopComponent.shadow_hidden"/>
             <file name="bsm-nova-ops-BCLTopComponent.shadow_hidden"/>
             <file name="bsm-nova-ops-RRPTopComponent.shadow_hidden"/>
             <file name="bsm-nova-ops-SLATopComponent.shadow_hidden"/>
