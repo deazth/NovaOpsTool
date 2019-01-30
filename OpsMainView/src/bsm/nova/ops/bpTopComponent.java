@@ -192,11 +192,37 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
             throw new NullPointerException("Iris No is empty");
           }
 
+        } else if (mode == 4) {
+          long currts = System.currentTimeMillis() / 1000;
+          patchvalue = (String) cbTaxProf.getModel().getSelectedItem();
+          getOldSql = "select \n"
+                  + "    tpro.poid_Id0\n"
+                  + "    , taext.rec_id\n"
+                  + "    , taext.value\n"
+                  + "from\n"
+                  + "    account_T ta\n"
+                  + "    left join profile_t tpro\n"
+                  + "        on ta.poid_Id0 = tpro.account_obj_id0\n"
+                  + "        and tpro.poid_type = '/profile/acct_extrating'\n"
+                  + "        and tpro.name = 'AcctTaxCode' \n"
+                  + "    left join PROFILE_ACCT_EXTRATING_data_T taext\n"
+                  + "        on tpro.poid_Id0 = taext.obj_Id0\n"
+                  + "        and taext.name = 'AcctTaxCode'\n"
+                  + "where ta.account_no = ? \n"
+                  + "order by taext.rec_id desc";
+
+          updateSql = "update PROFILE_ACCT_EXTRATING_data_T set valid_to = " + currts + " where obj_id0 = ? "
+                  + "and rec_id = ? ";
+
+          updateSql2 = "insert into PROFILE_ACCT_EXTRATING_data_T (obj_Id0, rec_id, name, value, valid_to, valid_from) "
+                  + "values (?, ?, 'AcctTaxCode', '" + patchvalue + "' , 0, " + currts + " )";
+
+          modetext = "Patch Account Tax Profile";
         }
 
         psGet = dbh.createPS(getOldSql);
         psUpdate = dbh.createPS(updateSql);
-        if (mode == 1) {
+        if (mode == 1 || mode == 4) {
           psUpdate2 = dbh.createPS(updateSql2);
         }
 
@@ -353,6 +379,59 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
       return output + constant.LINE_SEPARATOR;
     }
 
+    private String patchTaxProf(String ba) {
+      String output = "";
+      String currentstep = "";
+
+      if (ba.trim().isEmpty()) {
+        return "";
+      }
+
+      pbar.progress(ba, counter++);
+
+      try {
+        currentstep = "find BA";
+        psGet.setString(1, ba);
+
+        ResultSet rs = psGet.executeQuery();
+        if (rs.next()) {
+          String profpoid = dbHandler.dbGetString(rs, 1);
+          String rec_id = dbHandler.dbGetString(rs, 2);
+          String value = dbHandler.dbGetString(rs, 3);
+          int actual_rec_id = 0;
+          try {
+            actual_rec_id = Integer.parseInt(rec_id);
+          } catch (NumberFormatException e) {
+            actual_rec_id = 0;
+          }
+
+          // update the valid to for the existing record
+          currentstep = "set valid_to for current profile";
+          psUpdate.setString(1, profpoid);
+          psUpdate.setInt(2, actual_rec_id);
+          psUpdate.executeUpdate();
+
+          // insert new tax profile
+          currentstep = "insert new tax profile";
+          actual_rec_id++;
+          psUpdate2.setString(1, profpoid);
+          psUpdate2.setInt(2, actual_rec_id);
+          psUpdate2.executeUpdate();
+
+          output = "BA#" + ba + " changed from " + value + " to " + patchvalue;
+
+        } else {
+          output = "BA#" + ba + " not found";
+        }
+
+      } catch (SQLException e) {
+        output = "BA#" + ba + ": error while " + currentstep + ". " + e.getMessage();
+        Utilities.logStack(me, e);
+      }
+
+      return output  + constant.LINE_SEPARATOR;
+    }
+
     private void patch() {
       StringBuilder sb = new StringBuilder();
       String output = "";
@@ -369,6 +448,8 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
                 + "Target BP: " + patchvalue + "\n\n";
       } else if (mode == 3) {
         output = "Bulk patch bill media to paper";
+      } else if(mode == 4){
+        output = "Patch tax profile to " + patchvalue;
       }
 
       sb.append(output + constant.LINE_SEPARATOR);
@@ -386,6 +467,8 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
           sb.append(patchEmail(ba, overwrite));
         } else if (mode == 2) {
           sb.append(patchBP(ba));
+        } else if(mode == 4){
+          sb.append(patchTaxProf(ba));
         }
 
         txtOutput.setText(sb.toString());
@@ -431,6 +514,10 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
     jPanel5 = new javax.swing.JPanel();
     btnToPaper = new javax.swing.JButton();
     chkRemoveEmail = new javax.swing.JCheckBox();
+    jPanel6 = new javax.swing.JPanel();
+    jLabel5 = new javax.swing.JLabel();
+    cbTaxProf = new javax.swing.JComboBox<>();
+    btnTaxProf = new javax.swing.JButton();
 
     org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(bpTopComponent.class, "bpTopComponent.jLabel2.text")); // NOI18N
 
@@ -500,7 +587,7 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
         .addContainerGap()
         .addComponent(jLabel1)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
         .addContainerGap())
     );
 
@@ -519,7 +606,7 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addComponent(lblReady)
             .addGap(0, 0, Short.MAX_VALUE)))
@@ -531,7 +618,7 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
         .addContainerGap()
         .addComponent(lblReady)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
         .addContainerGap())
     );
 
@@ -581,7 +668,7 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(txtIrisNo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(cbNewBP, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+              .addComponent(cbNewBP, 0, 119, Short.MAX_VALUE))))
         .addContainerGap())
     );
     jPanel4Layout.setVerticalGroup(
@@ -629,6 +716,45 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
         .addComponent(chkRemoveEmail))
     );
 
+    jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(bpTopComponent.class, "bpTopComponent.jPanel6.border.title"))); // NOI18N
+    jPanel6.setToolTipText(org.openide.util.NbBundle.getMessage(bpTopComponent.class, "bpTopComponent.jPanel6.toolTipText")); // NOI18N
+
+    org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(bpTopComponent.class, "bpTopComponent.jLabel5.text")); // NOI18N
+
+    cbTaxProf.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ST", "RR" }));
+
+    org.openide.awt.Mnemonics.setLocalizedText(btnTaxProf, org.openide.util.NbBundle.getMessage(bpTopComponent.class, "bpTopComponent.btnTaxProf.text")); // NOI18N
+    btnTaxProf.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnTaxProfActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+    jPanel6.setLayout(jPanel6Layout);
+    jPanel6Layout.setHorizontalGroup(
+      jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel6Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel6Layout.createSequentialGroup()
+            .addComponent(jLabel5)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(cbTaxProf, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(jPanel6Layout.createSequentialGroup()
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(btnTaxProf))))
+    );
+    jPanel6Layout.setVerticalGroup(
+      jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanel6Layout.createSequentialGroup()
+        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabel5)
+          .addComponent(cbTaxProf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(btnTaxProf))
+    );
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -641,7 +767,8 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
           .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(btnStop)
           .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -656,6 +783,8 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnStop)))
         .addContainerGap())
@@ -701,12 +830,24 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
     bw.execute();
   }//GEN-LAST:event_btnToPaperActionPerformed
 
+  private void btnTaxProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaxProfActionPerformed
+    // TODO add your handling code here:
+    mode = 4;
+    runstate = true;
+
+    bgWorker bw = new bgWorker();
+    bw.addPropertyChangeListener(this);
+    bw.execute();
+  }//GEN-LAST:event_btnTaxProfActionPerformed
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton btnChangeBP;
   private javax.swing.JButton btnPEmail;
   private javax.swing.JButton btnStop;
+  private javax.swing.JButton btnTaxProf;
   private javax.swing.JButton btnToPaper;
   private javax.swing.JComboBox<String> cbNewBP;
+  private javax.swing.JComboBox<String> cbTaxProf;
   private javax.swing.JCheckBox chkOverwriteEmail;
   private javax.swing.JCheckBox chkPMedia;
   private javax.swing.JCheckBox chkRemoveEmail;
@@ -714,11 +855,13 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
+  private javax.swing.JLabel jLabel5;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;
   private javax.swing.JPanel jPanel4;
   private javax.swing.JPanel jPanel5;
+  private javax.swing.JPanel jPanel6;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JSplitPane jSplitPane1;
@@ -800,6 +943,9 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
 
     chkOverwriteEmail.setEnabled(false);
     chkPMedia.setEnabled(false);
+
+    btnTaxProf.setEnabled(false);
+    cbTaxProf.setEnabled(false);
   }
 
   private void enableBtn() {
@@ -809,6 +955,9 @@ public final class bpTopComponent extends TopComponent implements PropertyChange
 
     chkOverwriteEmail.setEnabled(true);
     chkPMedia.setEnabled(true);
+
+    btnTaxProf.setEnabled(true);
+    cbTaxProf.setEnabled(true);
   }
 
   private void customInit() {
