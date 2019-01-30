@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="Window">
+            <folder name="HSBA">
+                <file name="HSBA-fboTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/HSBA-fboTopComponent.instance"/>
+                </file>
+                <file name="HSBA-hofTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/HSBA-hofTopComponent.instance"/>
+                </file>
+            </folder>
+            <file name="HSBA-fboTopComponent.shadow_hidden"/>
+            <file name="HSBA-hofTopComponent.shadow_hidden"/>
+            <folder name="Operate">
+                <file name="bsm-nova-ops-SLATopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-SLATopComponent.instance"/>
+                </file>
+                <file name="bsm-nova-ops-bpTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-bpTopComponent.instance"/>
+                </file>
+                <file name="bsm-nova-ops-difTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-difTopComponent.instance"/>
+                </file>
+                <file name="bsm-nova-ops-fbcTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-fbcTopComponent.instance"/>
+                </file>
+                <file name="ops-mawa-pkpayTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/ops-mawa-pkpayTopComponent.instance"/>
+                </file>
+            </folder>
+            <folder name="Special">
+                <folder name="Telephony">
+                    <file name="bsm-nova-ops-AtaTopComponent.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-AtaTopComponent.instance"/>
+                    </file>
+                    <file name="bsm-nova-ops-BCLTopComponent.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-BCLTopComponent.instance"/>
+                    </file>
+                    <file name="bsm-nova-ops-UsgTopComponent.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-UsgTopComponent.instance"/>
+                    </file>
+                </folder>
+                <file name="bsm-nova-dev-setPLTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-dev-setPLTopComponent.instance"/>
+                </file>
+                <file name="bsm-nova-ops-RRPTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-RRPTopComponent.instance"/>
+                </file>
+                <file name="bsm-nova-ops-sExTblTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/bsm-nova-ops-sExTblTopComponent.instance"/>
+                </file>
+                <file name="itoc-yt-closeBA-WCeaiTopComponent.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/itoc-yt-closeBA-WCeaiTopComponent.instance"/>
+                </file>
+            </folder>
+            <file name="bsm-nova-dev-setPLTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-AtaTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-BCLTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-RRPTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-SLATopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-UsgTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-bpTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-difTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-fbcTopComponent.shadow_hidden"/>
+            <file name="bsm-nova-ops-sExTblTopComponent.shadow_hidden"/>
+            <file name="itoc-yt-closeBA-WCeaiTopComponent.shadow_hidden"/>
+            <file name="ops-mawa-pkpayTopComponent.shadow_hidden"/>
+        </folder>
+    </folder>
+    <folder name="Services">
+        <folder name="AutoupdateType">
+            <file name="ops_launch_update_center.instance">
+                <attr name="displayName" bundlevalue="ops.launch.Bundle#Services/AutoupdateType/ops_launch_update_center.instance"/>
+                <attr name="enabled" boolvalue="true"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
+                <attr name="url" bundlevalue="ops.launch.Bundle#ops_launch_update_center"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

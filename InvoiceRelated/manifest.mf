@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: bsm.nova.inv
+OpenIDE-Module-Localizing-Bundle: bsm/nova/inv/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ops.launch
+OpenIDE-Module-Implementation-Version: 12
+OpenIDE-Module-Install: ops/launch/Installer.class
+OpenIDE-Module-Layer: ops/launch/layer.xml
+OpenIDE-Module-Localizing-Bundle: ops/launch/Bundle.properties
+
